@@ -1,0 +1,4 @@
+[mysqld]
+log_bin=binlog
+binlog_format=MIXED
+expire_logs_days=7
