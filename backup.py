@@ -17,7 +17,7 @@ AWS_ACCESS_SECRET = ''
 AWS_S3_BUCKET = ''
 AWS_S3_PREFIX = ''
 
-MYSQL_CONTAINER = ''
+MYSQL_CONTAINER = None
 MYSQL_HOST = ''
 MYSQL_PORT = '3306'
 MYSQL_ROOT_PASSWORD = ''
@@ -108,7 +108,11 @@ def main():
     
     print('Copying log files to local directory')
     for log_file in logs:
-        result = run(['docker', 'cp', '{0}:/var/lib/mysql/{1}'.format(MYSQL_CONTAINER, log_file), '{0}/'.format(TEMP_PATH)])
+        result = None
+        if MYSQL_CONTAINER is not None:
+            result = run(['docker', 'cp', '{0}:/var/lib/mysql/{1}'.format(MYSQL_CONTAINER, log_file), '{0}/'.format(TEMP_PATH)])
+        else:
+            result = run(['cp', '/var/lib/mysql/{1}'.format(log_file), '{0}/'.format(TEMP_PATH)])
         if result.returncode != 0:
             print('Unable to copy \'{0}\'.'.format(log_file))
             exit(1)
